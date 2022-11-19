@@ -1,0 +1,16 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 30MB
+      max-request-size: 30MB
+  profiles:
+    active: dev
+# 支持自动处理循环依赖
+  main:
+    allow-circular-references: true
+
+server:
+  servlet:
+    context-path: /mySite
+  port: 8060
+
