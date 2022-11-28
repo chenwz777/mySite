@@ -1,4 +1,4 @@
-package com.chenwz.mysite.bean;
+package com.chenwz.mysite.bean.base;
 
 
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -8,8 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * @author ：bsh
- * @date ： 2022/8/29 18:31
+ * @author ：chenwz
+ * @date ： 2022/11/28 18:31
  * @description：
  */
 @Data
