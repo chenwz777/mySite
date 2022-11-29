@@ -28,7 +28,8 @@ public class HomeController extends BaseController {
 
     @GetMapping("/getBall")
     @ApiOperation("获取")
-    public BaseResponse<List<BallReturnDTO>> getBall(@ApiParam("多少组") @RequestParam(required = false,defaultValue = "5") Integer number){
+    public BaseResponse<List<BallReturnDTO>> getBall(@ApiParam("多少组") @RequestParam(required = false,defaultValue = "5")
+                                                                 Integer number){
         List<BallReturnDTO> list = doubleColorBallService.getBall(number);
         return success(list);
     }

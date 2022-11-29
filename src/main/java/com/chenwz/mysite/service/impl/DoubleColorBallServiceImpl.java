@@ -3,6 +3,7 @@ package com.chenwz.mysite.service.impl;
 import com.chenwz.mysite.service.DoubleColorBallService;
 import com.chenwz.mysite.vo.BallReturnDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,14 +21,15 @@ public class DoubleColorBallServiceImpl implements DoubleColorBallService {
         //
         List<BallReturnDTO> resultList = new ArrayList<>(number);
         for(int i = 0; i < number; i++){
-            BallReturnDTO returnDTO = this.generateDoubleBallByRandom();
-            resultList.add(returnDTO);
+            BallReturnDTO returnRandomDTO = this.generateDoubleBallByRandom();
+            resultList.add(returnRandomDTO);
+            BallReturnDTO returnShuffleDTO = this.generateDoubleBallByShuffle();
+            resultList.add(returnShuffleDTO);
         }
-
         return resultList;
     }
 
-    private void generateDoubleBallByShuffle() {
+    private BallReturnDTO generateDoubleBallByShuffle() {
         int redMax = 33;
         int blueMax = 16;
         List<Integer> redAllList = new ArrayList();
@@ -43,23 +45,31 @@ public class DoubleColorBallServiceImpl implements DoubleColorBallService {
         Collections.shuffle(blueAllList);
         redList.addAll(redAllList.subList(0, 6));
         Collections.sort(redList);
+        final String[] info = {""};
         redList.forEach(p->{
             if (p < 10) {
-                System.out.print("0" + p);
+                info[0] += "0" + p;
             } else {
-                System.out.print(p);
+                info[0] += p;
             }
-            System.out.print(" ");
+            info[0]+=" ";
         });
         int blue = blueAllList.get(0);
         if (blue < 10) {
-            System.out.print("[0" + blue + "]");
+            info[0] += "[0" + blue + "]";
         } else {
-            System.out.print("[" + blue + "]");
+            info[0] += "[" + blue + "]";
         }
         //校验结果
-        this.check(redList, blue);
-        System.out.println();
+        String message = this.check(redList, blue);
+        log.info(info[0]);
+        return BallReturnDTO.builder()
+                .blue(blue)
+                .type(2)
+                .isLegal(StringUtils.isEmpty(message))
+                .message(message)
+                .redList(redList)
+                .build();
     }
 
     private BallReturnDTO generateDoubleBallByRandom() {
@@ -78,24 +88,30 @@ public class DoubleColorBallServiceImpl implements DoubleColorBallService {
         //排序
         Collections.sort(redList);
         //输出结果
-        redList.forEach(p -> {
+        final String[] info = {""};
+        redList.forEach(p->{
             if (p < 10) {
-                System.out.print("0" + p);
+                info[0] += "0" + p;
             } else {
-                System.out.print(p);
+                info[0] += p;
             }
-            System.out.print(" ");
+            info[0]+=" ";
         });
-
         if (blue < 10) {
-            System.out.print("[0" + blue + "]");
+            info[0] += "[0" + blue + "]";
         } else {
-            System.out.print("[" + blue + "]");
+            info[0] += "[" + blue + "]";
         }
         //校验结果
-        this.check(redList, blue);
-        System.out.println();
-        return null;
+        String message = this.check(redList, blue);
+        log.info(info[0]);
+        return BallReturnDTO.builder()
+                .blue(blue)
+                .type(1)
+                .isLegal(StringUtils.isEmpty(message))
+                .message(message)
+                .redList(redList)
+                .build();
     }
 
     /**
@@ -107,10 +123,11 @@ public class DoubleColorBallServiceImpl implements DoubleColorBallService {
      *  4.红球3区，每个区至少有1球
      *
      */
-    private void check(List<Integer> redList, Integer blue){
+    private String check(List<Integer> redList, Integer blue){
         int bigCount = 0;  //大小，如果是0，1 5，6 不满足大小
         int singleCount = 0;  //单双，如果是0或者6，不满足
         int r1 = 0, r2 = 0, r3 = 0;  //红球三区 1-11,12-22,23-33
+        String info = null;
         List<Integer> shunList = new ArrayList<>();  //记下标
         for(int i = 0; i < redList.size(); i++){
             int redNum = redList.get(i);
@@ -136,31 +153,37 @@ public class DoubleColorBallServiceImpl implements DoubleColorBallService {
                     } else {
                         //输出符合条件的，重置
                         shunList.remove(shunList.size()-1);
-                        System.out.print(" 连续不符合，序列为：" + shunList);
-                        return;
+                        info = "连续不符合，序列为：" + shunList;
+                        log.info(info);
+                        return info;
                     }
 
                 }
             }
         }
         if(shunList.size() >=3){
-            System.out.print(" 连续不符合，序列为：" + shunList);
-            return;
+            info = "连续不符合，序列为：" + shunList;
+            log.info(info);
+            return info;
         }
         if(bigCount< 2 || bigCount > 4){
             //不符合
-            System.out.print(" 大小不符合：大号有("+bigCount+")个,小号有("+(6-bigCount)+")个");
-            return;
+            info = "大小不符合：大号有("+bigCount+")个,小号有("+(6-bigCount)+")个";
+            log.info(info);
+            return info;
         }
         if(singleCount == 0 || singleCount == 6){
-            System.out.print(" 单双不符合：单号有("+singleCount+")个,双号有("+(6-singleCount)+")个");
-            return;
+            info = "单双不符合：单号有("+singleCount+")个,双号有("+(6-singleCount)+")个";
+            log.info(info);
+            return info;
         }
         if(r1==0 || r2==0 || r3==0){
-            System.out.print(" 三区不符合：一区有("+r1+")个,二区有("+r2+")个,三区有("+r3+")个");
-            return;
+            info = "三区不符合：一区有("+r1+")个,二区有("+r2+")个,三区有("+r3+")个";
+            log.info(info);
+            return info;
         }
 
-        System.out.print(" 符合");
+        log.info("符合");
+        return info;
     }
 }

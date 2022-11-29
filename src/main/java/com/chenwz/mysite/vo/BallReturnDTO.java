@@ -24,6 +24,13 @@ public class BallReturnDTO {
     @ApiModelProperty("红球列表")
     private List<Integer> redList;
 
+    @ApiModelProperty("是否合规")
+    private Boolean isLegal;
+
+    @ApiModelProperty("不符合理由")
     private String message;
+
+    @ApiModelProperty("类型：1-随机2-重排")
+    private Integer type;
 
 }
