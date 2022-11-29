@@ -2,6 +2,7 @@ package com.chenwz.mysite.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.chenwz.mysite.constants.BaseConstants;
+import com.chenwz.mysite.controller.base.BaseController;
 import com.chenwz.mysite.vo.base.BaseResponse;
 import com.chenwz.mysite.bean.base.PageResult;
 import com.chenwz.mysite.service.UserService;
@@ -21,7 +22,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("api/v1/user")
 @Api(value = "用户接口",tags = "用户接口")
-public class UserController extends BaseController{
+public class UserController extends BaseController {
 
     @Autowired
     private UserService userService;

@@ -8,6 +8,7 @@ import com.chenwz.mysite.dao.UserMapper;
 import com.chenwz.mysite.service.UserService;
 import com.chenwz.mysite.vo.user.UserQueryVO;
 import com.chenwz.mysite.vo.user.UserReturnDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     @Autowired

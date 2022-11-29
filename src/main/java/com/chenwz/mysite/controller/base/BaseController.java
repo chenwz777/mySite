@@ -1,4 +1,4 @@
-package com.chenwz.mysite.controller;
+package com.chenwz.mysite.controller.base;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.chenwz.mysite.vo.base.BaseResponse;
