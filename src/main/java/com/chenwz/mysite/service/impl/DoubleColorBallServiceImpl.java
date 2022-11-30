@@ -62,7 +62,7 @@ public class DoubleColorBallServiceImpl implements DoubleColorBallService {
         }
         //校验结果
         String message = this.check(redList, blue);
-        log.info(info[0]);
+        log.info(info[0] + " " + (StringUtils.isEmpty(message)? "符合": message));
         return BallReturnDTO.builder()
                 .blue(blue)
                 .type(2)
@@ -120,7 +120,7 @@ public class DoubleColorBallServiceImpl implements DoubleColorBallService {
      *  1.三个及以上连续的不要，概率极低
      *  2.全大，全小的不要，概率很小，尽量保证2/4或者33比例， 1/5都很少，也不要了
      *  3.单双，只要不是6单/6双都可以接受
-     *  4.红球3区，每个区至少有1球
+     *  4.红球3区，每个区至少有1球，114情况也很少，暂且不要
      *
      */
     private String check(List<Integer> redList, Integer blue){
@@ -154,7 +154,6 @@ public class DoubleColorBallServiceImpl implements DoubleColorBallService {
                         //输出符合条件的，重置
                         shunList.remove(shunList.size()-1);
                         info = "连续不符合，序列为：" + shunList;
-                        log.info(info);
                         return info;
                     }
 
@@ -163,27 +162,26 @@ public class DoubleColorBallServiceImpl implements DoubleColorBallService {
         }
         if(shunList.size() >=3){
             info = "连续不符合，序列为：" + shunList;
-            log.info(info);
             return info;
         }
         if(bigCount< 2 || bigCount > 4){
             //不符合
             info = "大小不符合：大号有("+bigCount+")个,小号有("+(6-bigCount)+")个";
-            log.info(info);
             return info;
         }
         if(singleCount == 0 || singleCount == 6){
             info = "单双不符合：单号有("+singleCount+")个,双号有("+(6-singleCount)+")个";
-            log.info(info);
             return info;
         }
         if(r1==0 || r2==0 || r3==0){
             info = "三区不符合：一区有("+r1+")个,二区有("+r2+")个,三区有("+r3+")个";
-            log.info(info);
+            return info;
+        }
+        if((r1==1 && r2==1) || (r1==1 && r3== 1) || (r2==1 && r3==1)){
+            info = "三区不符合：一区有("+r1+")个,二区有("+r2+")个,三区有("+r3+")个";
             return info;
         }
 
-        log.info("符合");
         return info;
     }
 }
